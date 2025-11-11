@@ -15,8 +15,6 @@
   const formatDate = (date) => new Date(date).toLocaleDateString('pt-BR');
   const isLoading = ref(false);
 
-  const genres = ref([]);
-  
   onMounted(async () => {
   isLoading.value = true;
   await genreStore.getAllGenres('tv');
@@ -38,7 +36,7 @@ const listTvShows = async (genreId) => {
   isLoading.value = false;
 };
 
-const getGenreName = (id) => genres.value.find((genre) => genre.id === id).name
+// removed local genres/getGenreName in favor of the genre store methods
 </script>
 
 <template>
@@ -60,11 +58,10 @@ const getGenreName = (id) => genres.value.find((genre) => genre.id === id).name
   <div v-for="tvShow in tvShows" :key="tvShow.id" class="tv-card">
     <img
   :src="`https://image.tmdb.org/t/p/w500${tvShow.poster_path}`"
-  :alt="tvShow.title"
-  @click="openTvShow(tvShow.id)"
-/>
+  :alt="tvShow.name"
+  @click="openTvShow(tvShow.id)" />
     <div class="tv-details">
-      <p class="tv-title">{{ tvShow.title }}</p>
+      <p class="tv-title">{{ tvShow.name }}</p>
       <p class="tv-release-date">{{ formatDate(tvShow.first_air_date) }}</p>
       <p class="tv-genres">
   <span
