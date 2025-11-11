@@ -16,6 +16,9 @@
 <template>
   <header>
     <nav>
+      <router-link to="/">
+        <img src="/public/Group 5.svg" alt="">
+      </router-link>
       <router-link to="/">Home</router-link>
       <router-link to="/filmes">Filmes</router-link>
       <router-link to="/tv">Programas de TV</router-link>
@@ -24,6 +27,12 @@
   <main>
     <router-view />
   </main>
+  <footer>
+    <p>Darklist ©2025. Todos os direitos reservados.</p>
+    <p>Gabriela Senderski</p>
+    <p>Henrique Santiago</p>
+    <router-link to="/"><img src="/public/Group 5.svg" alt=""></router-link>
+  </footer>
 </template>
 
 <style scoped>
