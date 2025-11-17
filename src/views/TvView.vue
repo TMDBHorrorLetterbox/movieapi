@@ -1,40 +1,127 @@
 <script setup>
-  import { ref, onMounted } from 'vue';
-  import api from '@/plugins/axios';
-  import Loading from 'vue-loading-overlay';
-  import { useGenreStore } from '@/stores/genre';
-  import { useRouter } from 'vue-router'
-  const router = useRouter()
+import { ref, onMounted, onUnmounted, nextTick } from 'vue';
+import api from '@/plugins/axios';
+import Loading from 'vue-loading-overlay';
+import { useGenreStore } from '@/stores/genre';
+import { useRouter } from 'vue-router'
+const router = useRouter()
 
-  function openTvShow(tvShowId) {
+function openTvShow(tvShowId) {
   router.push({ name: 'TvShowDetails', params: { tvShowId } });
 }
 
-  const genreStore = useGenreStore();
+const genreStore = useGenreStore();
 
-  const formatDate = (date) => new Date(date).toLocaleDateString('pt-BR');
-  const isLoading = ref(false);
+const formatDate = (date) => new Date(date).toLocaleDateString('pt-BR');
+const isLoading = ref(false);
 
-  onMounted(async () => {
-  isLoading.value = true;
-  await genreStore.getAllGenres('tv');
-  isLoading.value = false;
-});
+const tvShows = ref([]);
+const currentPage = ref(1);
+const totalPages = ref(null);
 
-  const tvShows = ref([]);
+// rate limiting controls
+const requestTimestamps = ref([]);
+const maxRequestsPerMinute = 30;
+const minIntervalMs = 500;
+const rateLimited = ref(false);
 
-const listTvShows = async (genreId) => {
+const observer = ref(null);
+const sentinel = ref(null);
+const resumeTimeout = ref(null);
+
+const pruneOldTimestamps = () => {
+  const cutoff = Date.now() - 60_000;
+  requestTimestamps.value = requestTimestamps.value.filter(t => t > cutoff);
+};
+
+const canMakeRequest = () => {
+  pruneOldTimestamps();
+  const now = Date.now();
+  if (requestTimestamps.value.length >= maxRequestsPerMinute) return false;
+  const last = requestTimestamps.value[requestTimestamps.value.length - 1] || 0;
+  if (now - last < minIntervalMs) return false;
+  requestTimestamps.value.push(now);
+  return true;
+};
+
+const scheduleResume = () => {
+  if (resumeTimeout.value) clearTimeout(resumeTimeout.value);
+  resumeTimeout.value = setTimeout(() => {
+    rateLimited.value = false;
+    resumeTimeout.value = null;
+  }, 60_000); // reset after 60 seconds
+};
+
+const listTvShows = async (genreId, page = 1) => {
   genreStore.setCurrentGenreId(genreId);
   isLoading.value = true;
+  if (!canMakeRequest()) {
+    rateLimited.value = true;
+    isLoading.value = false;
+    scheduleResume(); // schedule auto-resume after 60s
+    return;
+  }
   const response = await api.get('discover/tv', {
     params: {
-      with_genres: genreId,
+      with_genres: '18,9648',
       language: 'pt-BR',
+      page,
     },
   });
-  tvShows.value = response.data.results;
+  if (page > 1) {
+    tvShows.value.push(...response.data.results);
+  } else {
+    tvShows.value = response.data.results;
+  }
+  currentPage.value = response.data.page || page;
+  totalPages.value = response.data.total_pages || null;
   isLoading.value = false;
 };
+
+const loadMoreTvShows = async () => {
+  if (isLoading.value) return;
+  if (rateLimited.value) return;
+  if (totalPages.value && currentPage.value >= totalPages.value) {
+    if (observer.value) observer.value.disconnect();
+    return;
+  }
+  const next = currentPage.value + 1;
+  await listTvShows(genreStore.currentGenreId || (genreStore.genres[0] && genreStore.genres[0].id), next);
+};
+
+onMounted(async () => {
+  // initial load
+  isLoading.value = true;
+  await genreStore.getAllGenres('tv');
+  if (genreStore.genres && genreStore.genres.length > 0) {
+    await listTvShows(genreStore.genres[0].id);
+  }
+  isLoading.value = false;
+
+  observer.value = new IntersectionObserver((entries) => {
+    const e = entries[0];
+    if (!e) return;
+    if (rateLimited.value) {
+      if (observer.value) observer.value.disconnect();
+      return;
+    }
+    if (e.isIntersecting && !isLoading.value) {
+      loadMoreTvShows();
+    }
+    if (totalPages.value && currentPage.value >= totalPages.value && observer.value) {
+      observer.value.disconnect();
+    }
+  }, { root: null, rootMargin: '300px' });
+
+  nextTick(() => {
+    if (sentinel.value) observer.value.observe(sentinel.value);
+  });
+});
+
+onUnmounted(() => {
+  if (observer.value) observer.value.disconnect();
+  if (resumeTimeout.value) clearTimeout(resumeTimeout.value);
+});
 
 // removed local genres/getGenreName in favor of the genre store methods
 </script>
@@ -42,17 +129,6 @@ const listTvShows = async (genreId) => {
 <template>
   <div>
     <h1>Programas de TV</h1>
-     <ul class="genre-list">
-    <li
-    v-for="genre in genreStore.genres"
-    :key="genre.id"
-    @click="listTvShows(genre.id)"
-    class="genre-item"
-    :class="{ active: genre.id === genreStore.currentGenreId }"
-  >
-    {{ genre.name }}
-  </li>
-  </ul>
   <Loading v-model:active="isLoading" is-full-page />
   <div class="tv-list">
   <div v-for="tvShow in tvShows" :key="tvShow.id" class="tv-card">
@@ -67,7 +143,6 @@ const listTvShows = async (genreId) => {
   <span
   v-for="genre_id in tvShow.genre_ids"
   :key="genre_id"
-  @click="listTvShows(genre_id)"
   :class="{ active: genre_id === genreStore.currentGenreId }"
 >
   {{ genreStore.getGenreName(genre_id) }}
@@ -76,6 +151,10 @@ const listTvShows = async (genreId) => {
     </div>
   </div>
 </div>
+  <div style="text-align:center; margin-top:1rem">
+    <div v-if="rateLimited" class="rate-limited">Limite de requisições atingido — aguarde alguns segundos</div>
+    <div ref="sentinel" style="height:1px"></div>
+  </div>
   </div>
 </template>
 
