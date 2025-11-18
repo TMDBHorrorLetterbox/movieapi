@@ -11,6 +11,7 @@
     response = await api.get('genre/tv/list?language=pt-BR');
     TVGenres.value = response.data.genres;
   });
+
 </script>
 
 <template>

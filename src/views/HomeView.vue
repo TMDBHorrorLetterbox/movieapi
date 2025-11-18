@@ -1,14 +1,18 @@
 <template>
   <section class="inicio">
-    <div class="bemVindo">
-      <h1>BEM-VINDO À DARKLIST</h1>
-      <h3>Pronto para avaliar seu horror</h3>
-    </div>
-    <div class="start">
-      <button>Começar</button>
-    </div>
-    <div class="slogan">
-      <h3>Aqui, os fãs de terror encontram o paraíso! Com um catálogo restrito à horror e crimes, permitimos a avaliação e resenha de filmes vistos por você.</h3>
+    <div class="espacer">
+        <div class="bemVindo">
+          <h1>BEM-VINDO À DARKLIST</h1>
+          <h3>Pronto para descobrir o verdadeiro horror?</h3>
+        </div>
+      <div class="inferior">
+        <div class="start">
+          <router-link to="/filmes"><button>COMEÇAR</button></router-link>
+        </div>
+        <div class="slogan">
+        <h3>Aqui, os fãs de terror encontram o paraíso! Com um catálogo restrito à horror e crimes, permitimos a avaliação e resenha de filmes vistos por você.</h3>
+        </div>
+      </div>
     </div>
     <hr>
   </section>
@@ -25,7 +29,6 @@
   </section>
 </template>
 <style scoped>
-/* ==== GERAL ==== */
 
 body {
   margin: 0;
@@ -39,13 +42,9 @@ section {
   width: 100%;
 }
 
-/* ==== SESSÃO INÍCIO ==== */
-
 .inicio {
   width: 100%;
   padding: 180px 40px 80px;
-
-  /* Imagem + overlay escuro */
   background:
     linear-gradient(to bottom, rgba(0,0,0,0.2), #000),
     url('/bannerArt.png');
@@ -54,20 +53,31 @@ section {
   background-position: center;
   background-repeat: no-repeat;
 }
+
+.espacer {
+ margin: 305px 30px 0 30px;
+}
 .bemVindo h1 {
-  font-size: 3rem;
+  font-size: 4rem;
   letter-spacing: 2px;
-  margin-bottom: 10px;
+  margin-bottom: 2px;
   color: #fff;
+  font-family: julius sans one, sans-serif;
 }
 
 .bemVindo h3 {
   font-weight: 300;
-  font-size: 1.2rem;
+  font-size: 2rem;
   color: #ccc;
-  margin-bottom: 40px;
+  margin-bottom: 10px;
+  font-family: junge, sans-serif;
 }
-
+.inferior {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: junge, sans-serif;
+}
 .start {
   max-width: 600px;
 }
@@ -75,13 +85,14 @@ section {
 .start button {
   background: #7a0b0b;
   border: none;
-  padding: 12px 32px;
-  font-size: 1.1rem;
+  padding: 17px 40px;
+  font-size: 2rem;
   color: white;
-  margin-bottom: 25px;
+  margin-bottom: 0px;
   cursor: pointer;
   border-radius: 4px;
   transition: 0.3s ease;
+  font-family: junge, sans-serif;
 }
 
 .start button:hover {
@@ -89,22 +100,22 @@ section {
 }
 
 .slogan h3 {
-  line-height: 1.5rem;
+  font-size: 2rem;
+  line-height: 1.8rem;
   font-weight: 300;
   color: #ddd;
   text-align: right;
-  padding-left: 1200px;
-  padding-right: 3f0px;
+  padding-left: 750px;
+  padding-right: 30px;
+  letter-spacing: 2px;
 }
 
 .inicio hr {
-  margin-top: 60px;
+  margin-top: 30px;
   border: none;
   height: 1px;
   background: #333;
 }
-
-/* ==== SEÇÕES: CLÁSSICOS / RECENTES / FILMES B ==== */
 
 .destaqueCla {
   padding: 40px;
@@ -117,12 +128,10 @@ section {
   letter-spacing: 1px;
 }
 
-/* Títulos separados como na tela */
 .cla, .rec, .filmesB {
   margin-bottom: 60px;
 }
 
-/* Espaço inferior igual ao da tela */
 .filmesB {
   padding-bottom: 120px;
 }

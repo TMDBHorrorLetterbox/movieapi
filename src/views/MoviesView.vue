@@ -130,7 +130,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div>
+  <div class="movies-view">
     <h1>Filmes</h1>
   <loading v-model:active="isLoading" is-full-page />
   <div class="movie-list">
@@ -162,7 +162,12 @@ onUnmounted(() => {
   </div>
 </template>
 <style scoped>
-
+.movies-view {
+  padding: 1rem 2rem;
+  background-color: #0e0e0eff;
+  color: #8d0000ff;
+  min-height: 100vh;
+}
 .genre-list {
   display: flex;
   justify-content: center;
@@ -172,18 +177,7 @@ onUnmounted(() => {
   margin-bottom: 2rem;
 }
 
-.genre-item {
-  background-color: #387250;
-  border-radius: 1rem;
-  padding: 0.5rem 1rem;
-  color: #fff;
-}
 
-.genre-item:hover {
-  cursor: pointer;
-  background-color: #4e9e5f;
-  box-shadow: 0 0 0.5rem #387250;
-}
 .movie-list {
   display: flex;
   flex-wrap: wrap;
@@ -225,28 +219,19 @@ onUnmounted(() => {
 }
 
 .movie-genres span {
-  background-color: #748708;
+  background-color: #770000;
   border-radius: 0.5rem;
   padding: 0.2rem 0.5rem;
-  color: #fff;
+  color: #000000ff;
   font-size: 0.8rem;
   font-weight: bold;
 }
 
 .movie-genres span:hover {
   cursor: pointer;
-  background-color: #455a08;
-  box-shadow: 0 0 0.5rem #748708;
+  background-color: #A70000;
+  box-shadow: 0 0 0.5rem #770000;
 }
 
-.active {
-  background-color: #67b086;
-  font-weight: bolder;
-}
 
-.movie-genres span.active {
-  background-color: #abc322;
-  color: #000;
-  font-weight: bolder;
-}
 </style>
