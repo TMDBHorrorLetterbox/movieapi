@@ -34,9 +34,9 @@ export const useRatingsStore = defineStore('ratings', () => {
 
   const setRating = (id, rating, type = 'movie', itemData = {}) => {
     if (!id || rating < 0 || rating > 5) return;
-    
+
     const existingIndex = state.items.findIndex((m) => m.id === id && m.type === type);
-    
+
     if (existingIndex >= 0) {
       state.items[existingIndex].rating = rating;
       state.items[existingIndex].ratedAt = new Date().toISOString();
@@ -50,7 +50,7 @@ export const useRatingsStore = defineStore('ratings', () => {
       };
       state.items.push(toStore);
     }
-    
+
     saveToStorage(state.items);
   };
 

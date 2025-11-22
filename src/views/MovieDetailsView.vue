@@ -70,8 +70,8 @@
         </button>
         <div>
           <p>Sua avaliação:</p>
-          <StarRating 
-            :itemId="movieStore.currentMovie.id" 
+          <StarRating
+            :itemId="movieStore.currentMovie.id"
             :itemType="'movie'"
             :itemData="movieStore.currentMovie"
           />

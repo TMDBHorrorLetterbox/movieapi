@@ -70,8 +70,8 @@
         </button>
         <div>
           <p>Sua avaliação:</p>
-          <StarRating 
-            :itemId="tvStore.currentTvShow.id" 
+          <StarRating
+            :itemId="tvStore.currentTvShow.id"
             :itemType="'tv'"
             :itemData="tvStore.currentTvShow"
           />
