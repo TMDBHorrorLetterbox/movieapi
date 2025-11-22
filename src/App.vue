@@ -22,6 +22,9 @@
       <router-link to="/">Home</router-link>
       <router-link to="/filmes">Filmes</router-link>
       <router-link to="/tv">Programas de TV</router-link>
+      <router-link to="/assistidos">Assistidos</router-link>
+      <router-link to="/curtidos">Curtidos</router-link>
+      <router-link to="/lista-desejos">Lista de Desejos</router-link>
     </nav>
   </header>
   <main>

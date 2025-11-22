@@ -17,6 +17,21 @@ const routes = [
     component: () => import('../views/TvView.vue'),
   },
   {
+    path: '/assistidos',
+    name: 'Assistidos',
+    component: () => import('../views/AssistidosView.vue'),
+  },
+  {
+    path: '/curtidos',
+    name: 'Curtidos',
+    component: () => import('../views/CurtidosView.vue'),
+  },
+  {
+    path: '/lista-desejos',
+    name: 'ListaDeDesejos',
+    component: () => import('../views/ListaDeDesejosView.vue'),
+  },
+  {
   path: '/movie/:movieId',
   name: 'MovieDetails',
   component: () => import('../views/MovieDetailsView.vue'),
