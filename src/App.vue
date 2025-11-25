@@ -67,6 +67,7 @@
     if (item.type === 'movie') router.push({ name: 'MovieDetails', params: { movieId: item.id } });
     else router.push({ name: 'TvShowDetails', params: { tvShowId: item.id } });
   };
+
 </script>
 
 <template>
@@ -78,7 +79,7 @@
         </router-link>
         <router-link to="/">Home</router-link>
         <router-link to="/filmes">Filmes</router-link>
-        <router-link to="/tv">Programas de TV</router-link>
+        <router-link to="/tv">Séries</router-link>
       </div>
 
       <div class="nav-search">
@@ -118,16 +119,29 @@
 
 <style scoped>
 header {
-  height: 3rem;
+  height: 4rem;
   display: flex;
-  background-color: black;
+  background-color: #770000;
   color: #fff;
   font-size: 1.2rem;
   padding-left: 2rem;
 }
+nav span {
+  padding-top: 10px;
+  padding-right: 300px;
+  padding-left: 30px;
+}
+
+nav input {
+  height: 1.8rem;
+  width: 20rem;
+  border-radius: 2px;
+  border: none;
+}
 
 nav {
-  column-gap: 2rem;
+  font-size: 1.5rem;
+  column-gap: 4rem;
   margin-bottom: 0;
   display: flex;
   align-items: center;
@@ -135,7 +149,8 @@ nav {
 
 nav a {
   text-decoration: none;
-  color: #fff;
+  color: #000000;
+  
 }
 
 .nav-left { display:flex; align-items:center; gap:1rem; }
