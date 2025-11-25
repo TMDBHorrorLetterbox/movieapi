@@ -1,5 +1,5 @@
 <script setup>
-  import { defineProps, onMounted } from 'vue';
+  import { defineProps, onMounted, watch } from 'vue';
   import { useMovieStore } from '@/stores/movie';
   import { useWatchedStore } from '@/stores/watched';
   import { useLikedStore } from '@/stores/liked';
@@ -17,9 +17,13 @@
     },
   });
 
-  onMounted(async () => {
+  const loadMovie = async () => {
     await movieStore.getMovieDetail(props.movieId);
-  });
+  };
+
+  onMounted(loadMovie);
+
+  watch(() => props.movieId, loadMovie);
 </script>
 
 <template>
@@ -104,6 +108,20 @@
       <p v-else>{{ company.name }}</p>
     </template>
   </div>
+
+  <p>Elenco</p>
+  <div class="cast">
+    <div v-for="actor in movieStore.currentMovie.credits?.cast?.slice(0, 12)" :key="actor.id" class="cast-member">
+      <img
+        v-if="actor.profile_path"
+        :src="`https://image.tmdb.org/t/p/w185${actor.profile_path}`"
+        :alt="actor.name"
+      />
+      <div v-else class="no-photo">Sem foto</div>
+      <p class="actor-name">{{ actor.name }}</p>
+      <p class="character-name">{{ actor.character || 'N/A' }}</p>
+    </div>
+  </div>
 </template>
 
 <style scoped>
@@ -156,4 +174,49 @@
   }
 
   
+
+  .cast {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .cast-member {
+    background: #1a1a1a;
+    border-radius: 8px;
+    padding: 0.5rem;
+    text-align: center;
+  }
+
+  .cast-member img {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+  }
+
+  .no-photo {
+    width: 100%;
+    height: 240px;
+    background: #333;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    margin-bottom: 0.5rem;
+  }
+
+  .actor-name {
+    font-weight: bold;
+    font-size: 0.9rem;
+    margin: 0.25rem 0;
+  }
+
+  .character-name {
+    font-size: 0.8rem;
+    color: #aaa;
+    margin: 0;
+  }
 </style>
