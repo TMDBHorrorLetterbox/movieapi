@@ -6,7 +6,6 @@
   const moviesGenres = ref([]);
   const TVGenres = ref([]);
 
-  // gêneros forçados conforme especificado pelo usuário
   const forcedMovieGenres = [27, 53];
   const forcedTvGenres = [18, 9648];
 
@@ -45,7 +44,6 @@
         return forcedTvGenres.some(g => gids.includes(g));
       }).map(r => ({ id: r.id, type: 'tv', title: r.name, poster_path: r.poster_path }));
 
-      // combinar e limitar
       suggestions.value = [...movies.slice(0,6), ...tvs.slice(0,6)].slice(0,8);
     } catch (err) {
       console.error('Erro na busca de sugestões', err);
@@ -94,15 +92,15 @@
           <div v-for="s in suggestions" :key="s.type + '-' + s.id" class="suggestion" @mousedown.prevent="openSuggestion(s)">
             <img v-if="s.poster_path" :src="`https://image.tmdb.org/t/p/w92${s.poster_path}`" alt="" />
             <span>{{ s.title }}</span>
-            <small class="muted">{{ s.type === 'movie' ? 'Filme' : 'TV' }}</small>
+            <small class="muted">{{ s.type === 'movie' ? 'Filme' : 'Série' }}</small>
           </div>
         </div>
       </div>
 
       <div class="nav-right">
-        <router-link to="/assistidos">Assistidos</router-link>
-        <router-link to="/curtidos">Curtidos</router-link>
-        <router-link to="/lista-desejos">Lista de Desejos</router-link>
+        <router-link to="/assistidos"><span class="fa-solid fa-eye"></span></router-link>
+        <router-link to="/curtidos"><span class="fa-solid fa-heart"></span></router-link>
+        <router-link to="/lista-desejos"><span class="fa-solid fa-bookmark"></span></router-link>
       </div>
     </nav>
   </header>
@@ -124,24 +122,26 @@ header {
   background-color: #770000;
   color: #fff;
   font-size: 1.2rem;
-  padding-left: 2rem;
+  padding-left: 3rem;
 }
 nav span {
-  padding-top: 10px;
-  padding-right: 300px;
-  padding-left: 30px;
+  padding-top: 01px;
+  padding-right: 20px;
+  padding-left: 10px;
+  font-size: 1rem;
+  text-align: justify;
 }
 
 nav input {
-  height: 1.8rem;
-  width: 20rem;
+  height: 2.2rem;
+  width: 24rem;
   border-radius: 2px;
   border: none;
 }
 
 nav {
-  font-size: 1.5rem;
-  column-gap: 4rem;
+  font-size: 1.3rem;
+  column-gap: 2rem;
   margin-bottom: 0;
   display: flex;
   align-items: center;
@@ -153,13 +153,70 @@ nav a {
   
 }
 
-.nav-left { display:flex; align-items:center; gap:1rem; }
-.nav-search { position:relative; margin-left:1rem; }
-.nav-search input { padding:0.3rem 0.5rem; border-radius:4px; border:1px solid #333; background:#111; color:#fff; }
-.search-suggestions { position:absolute; top:2.6rem; left:0; background:#0b0b0b; border:1px solid #222; width:24rem; max-height:18rem; overflow:auto; z-index:40; padding:0.5rem; border-radius:4px; }
-.suggestion { display:flex; gap:0.5rem; align-items:center; padding:0.35rem; cursor:pointer; }
-.suggestion img { width:40px; height:auto; border-radius:4px; }
-.suggestion:hover { background:rgba(255,255,255,0.03); }
-.muted { color:#aaa; margin-left:auto; font-size:0.75rem; }
-.nav-right { margin-left: auto; display:flex; gap:1rem; align-items:center; }
+nav img {
+  height: 2.3rem;
+  margin-top: 0.7rem;
+}
+
+.nav-left { 
+  display:flex; 
+  align-items:center; 
+  gap:4rem; 
+}
+.nav-search { 
+  position:relative; 
+  margin-left:5rem; 
+}
+.nav-search input { 
+  padding:0.3rem 0.5rem; 
+  border-radius:4px; 
+  border:1px solid #000000; 
+  background:#ffffff; 
+  color:#000000; 
+}
+.search-suggestions { 
+  position:absolute; 
+  top:2.6rem; 
+  left:0; 
+  background:#770000; 
+  border:1px solid #222; 
+  width:24rem; 
+  max-height:18rem; 
+  overflow:auto; 
+  z-index:40; 
+  padding:0.5rem; 
+  border-radius:4px; 
+}
+.suggestion { 
+  display:flex; 
+  gap:0.5rem; 
+  align-items:center; 
+  padding:0.35rem; 
+  cursor:pointer; 
+}
+.suggestion img { 
+  width:40px; 
+  height:auto; 
+  border-radius:4px; 
+}
+.suggestion:hover { 
+  background:rgba(255,255,255,0.03); 
+}
+.muted { 
+  color:#aaa; 
+  margin-left:auto; 
+  font-size:0.75rem; 
+  margin-right: 10px; 
+}
+.nav-right { 
+  margin-left: 30rem;
+  display: flex;
+  gap: 1rem; 
+  align-items: center;
+}
+
+.nav-right span { 
+  font-size: 1.4rem; 
+  cursor: pointer;
+}
 </style>

@@ -27,7 +27,18 @@
 </script>
 
 <template>
-  <div class="main" :style="{ background: `url(https://image.tmdb.org/t/p/original${movieStore.currentMovie.backdrop_path})`, backgroundPosition: 'center', backgroundSize: 'cover', backgroundRepeat: 'no-repeat' }">
+  <div
+  class="main"
+  :style="{
+    background: `
+      linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,1.0)),
+      url(https://image.tmdb.org/t/p/original${movieStore.currentMovie.backdrop_path})
+    `,
+    backgroundPosition: 'center',
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat'
+  }"
+>
     <div class="content">
       
       <div class="details">
@@ -40,7 +51,6 @@
         <h1>Filme: {{ movieStore.currentMovie.title }}</h1>
         <p>{{ movieStore.currentMovie.tagline }}</p>
         <p>{{ movieStore.currentMovie.overview }}</p>
-        <p>Orçamento: ${{ movieStore.currentMovie.budget }}</p>
         <p>Avaliação: {{ movieStore.currentMovie.vote_average }}</p>
         </div>
         <div class="box">
@@ -72,13 +82,13 @@
           v-if="!wishlistStore.isInWishlist(movieStore.currentMovie.id, 'movie')"
           @click="wishlistStore.addToWishlist(movieStore.currentMovie, 'movie')"
         >
-          <span class="fa-solid fa-list"></span>
+          <span class="fa-regular fa-bookmark"></span>
         </button>
         <button
           v-else
           @click="wishlistStore.removeFromWishlist(movieStore.currentMovie.id, 'movie')"
         >
-          <span class="fa-solid fa-list-check"></span>
+          <span class="fa-solid fa-bookmark"></span>
         </button>
         <div>
           <p>Sua avaliação:</p>
@@ -156,6 +166,11 @@
   .left h1 {
     font-size: 4rem;
     font-family: julius sans one, sans-serif;
+  }
+  .left p {
+    font-size: 1.2rem;
+    font-family: junge, sans-serif;
+    margin: 0.5rem 0;
   }
   .box {
     display: flex;
