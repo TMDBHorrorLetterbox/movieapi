@@ -1,5 +1,5 @@
 <script setup>
-  import { defineProps, onMounted, watch } from 'vue';
+  import { defineProps, onMounted, watch, computed } from 'vue';
   import { useTvStore } from '@/stores/tv';
   import { useWatchedStore } from '@/stores/watched';
   import { useLikedStore } from '@/stores/liked';
@@ -24,11 +24,34 @@
   onMounted(loadTvShow);
 
   watch(() => props.tvShowId, loadTvShow);
+
+  // Extrai o primeiro trailer (YouTube) ou null
+  const trailerKey = computed(() => {
+    const videos = tvStore.currentTvShow.videos?.results || [];
+    const trailer = videos.find(v => v.type === 'Trailer' && v.site === 'YouTube');
+    return trailer?.key || null;
+  });
+
+  const trailerUrl = computed(() => {
+    return trailerKey.value ? `https://www.youtube.com/embed/${trailerKey.value}` : null;
+  });
 </script>
 
 <template>
   <div class="main">
     <div class="content">
+      <!-- Trailer Section -->
+      <div v-if="trailerUrl" class="trailer-section">
+        <iframe
+          class="trailer"
+          :src="trailerUrl + '?autoplay=0'"
+          title="Trailer"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+      </div>
+
       <img
         :src="`https://image.tmdb.org/t/p/w185${tvStore.currentTvShow.poster_path}`"
         :alt="tvStore.currentTvShow.title"
@@ -119,6 +142,22 @@
 </template>
 
 <style scoped>
+  .trailer-section {
+    width: 100%;
+    max-width: 800px;
+    margin-bottom: 2rem;
+    aspect-ratio: 16 / 9;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #000;
+  }
+
+  .trailer {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
   .companies {
     display: flex;
     flex-direction: row;
