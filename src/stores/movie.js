@@ -10,7 +10,10 @@ export const useMovieStore = defineStore('movie', () => {
   const currentMovie = computed(() => state.currentMovie);
 
   const getMovieDetail = async (movieId) => {
-    const response = await api.get(`movie/${movieId}`, { params: { append_to_response: 'credits,videos' } });
+    const response = await api.get(`movie/${movieId}`, { params: { 
+        append_to_response: 'credits,videos',
+        language: 'pt-BR'
+      }});
     state.currentMovie = response.data;
   };
 
