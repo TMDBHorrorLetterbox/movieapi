@@ -1,5 +1,5 @@
 <script setup>
-  import { ref, onMounted } from 'vue';
+  import { ref, onMounted, onUnmounted } from 'vue';
   import { useRouter } from 'vue-router';
   import api from './plugins/axios';
 
@@ -66,11 +66,35 @@
     else router.push({ name: 'TvShowDetails', params: { tvShowId: item.id } });
   };
 
+
+const showNav = ref(true);
+let lastScroll = 0;
+
+const handleScroll = () => {
+  const currentScroll = window.scrollY;
+
+  if (currentScroll < lastScroll) {
+    showNav.value = true;
+  } else {
+    showNav.value = false;
+  }
+
+  lastScroll = currentScroll;
+};
+
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll);
+});
+
 </script>
 
 <template>
   <header>
-    <nav>
+    <nav :class="{ visible: showNav }" class="navbar">
       <div class="nav-left">
         <router-link to="/">
           <img src="/public/Group 5.svg" alt="">
@@ -116,10 +140,28 @@
 </template>
 
 <style scoped>
+.router-link-exact-active {
+  color: #ffdbdb;       
+}
+.navbar {
+ position: fixed;
+  top: 0;
+  left: 0;             
+  width: 100vw;       
+  height: 63px;        
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  background: rgba(255, 25, 25, 0.5);  
+  backdrop-filter: blur(5px);       
+  transition: transform 0.3s ease;                   
+}
+
+
 header {
   height: 4rem;
   display: flex;
-  background-color: #770000;
+  background-color: #110000;
   color: #fff;
   font-size: 1.2rem;
   padding-left: 3rem;
@@ -140,7 +182,9 @@ nav input {
 }
 
 nav {
-  font-size: 1.3rem;
+  font-family: julius sans one, sans-serif;
+  font-weight: bold;
+  font-size: 1.4rem;
   column-gap: 2rem;
   margin-bottom: 0;
   display: flex;
@@ -173,6 +217,14 @@ nav img {
   border:1px solid #000000; 
   background:#ffffff; 
   color:#000000; 
+}
+
+.navbar:not(.visible) {
+  transform: translateY(-100%);
+}
+
+.navbar.visible {
+  transform: translateY(0);
 }
 .search-suggestions { 
   position:absolute; 
@@ -218,5 +270,16 @@ nav img {
 .nav-right span { 
   font-size: 1.4rem; 
   cursor: pointer;
+}
+
+footer {
+  height: 10rem;
+  background-color: #770000;
+  color: #000000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
 }
 </style>

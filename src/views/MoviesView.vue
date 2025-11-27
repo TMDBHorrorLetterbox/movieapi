@@ -12,20 +12,19 @@ function openMovie(movieId) {
 
 const genreStore = useGenreStore();
 
-const formatDate = (date) => new Date(date).toLocaleDateString('pt-BR');
+const formatDate = (date) => new Date(date).getFullYear('pt-BR');
 const isLoading = ref(false);
 
 const movies = ref([]);
 const currentPage = ref(1);
 const totalPages = ref(null);
 
-// rate limiting controls
-const requestTimestamps = ref([]); // ms timestamps of recent requests
-const maxRequestsPerMinute = 30; // configurable: max requests allowed in 60s window
-const minIntervalMs = 500; // configurable: minimum ms between requests
+const requestTimestamps = ref([]);
+const maxRequestsPerMinute = 30;
+const minIntervalMs = 500;
 const rateLimited = ref(false);
 
-// infinite scroll observer
+
 const observer = ref(null);
 const sentinel = ref(null);
 const resumeTimeout = ref(null);
@@ -50,17 +49,16 @@ const scheduleResume = () => {
   resumeTimeout.value = setTimeout(() => {
     rateLimited.value = false;
     resumeTimeout.value = null;
-  }, 60_000); // reset after 60 seconds
+  }, 60_000); 
 };
 
 const listMovies = async (genreId, page = 1) => {
   genreStore.setCurrentGenreId(genreId);
   isLoading.value = true;
-  // rate-limit check
   if (!canMakeRequest()) {
     rateLimited.value = true;
     isLoading.value = false;
-    scheduleResume(); // schedule auto-resume after 60s
+    scheduleResume(); 
     return;
   }
 
@@ -71,7 +69,7 @@ const listMovies = async (genreId, page = 1) => {
       page,
     },
   });
-  // handle append for pages > 1
+
   if (page > 1) {
     movies.value.push(...response.data.results);
   } else {
@@ -94,7 +92,6 @@ const loadMoreMovies = async () => {
 };
 
 onMounted(async () => {
-  // initial load
   isLoading.value = true;
   await genreStore.getAllGenres('movie');
   if (genreStore.genres && genreStore.genres.length > 0) {
@@ -102,7 +99,6 @@ onMounted(async () => {
   }
   isLoading.value = false;
 
-  // intersection observer for infinite scroll
   observer.value = new IntersectionObserver((entries) => {
     const e = entries[0];
     if (!e) return;
@@ -131,7 +127,6 @@ onUnmounted(() => {
 
 <template>
   <div class="movies-view">
-    <h1>Filmes</h1>
   <loading v-model:active="isLoading" is-full-page />
   <div class="movie-list">
   <div v-for="movie in movies" :key="movie.id" class="movie-card">
@@ -142,7 +137,7 @@ onUnmounted(() => {
 />
     <div class="movie-details">
       <p class="movie-title">{{ movie.title }}</p>
-      <p class="movie-release-date">{{ formatDate(movie.release_date) }}</p>
+      <p class="movie-release-date"> Lançamento: {{ formatDate(movie.release_date) }}</p>
       <p class="movie-genres">
             <span
   v-for="genre_id in movie.genre_ids"
@@ -162,9 +157,10 @@ onUnmounted(() => {
   </div>
 </template>
 <style scoped>
+
 .movies-view {
   padding: 1rem 2rem;
-  background-color: #0e0e0eff;
+  background-color: rgb(0, 0, 0);
   color: #8d0000ff;
   min-height: 100vh;
 }
@@ -179,17 +175,20 @@ onUnmounted(() => {
 
 
 .movie-list {
+  margin-top: 4rem;
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 4rem;
+  justify-content: center;
 }
 
 .movie-card {
   width: 15rem;
-  height: 30rem;
+  height: 27rem;
   border-radius: 0.5rem;
   overflow: hidden;
-  box-shadow: 0 0 0.5rem #000;
+  background-color: #0e0e0eff;
+  box-shadow: 0 0 0.5rem rgb(146, 0, 0);
 }
 
 .movie-card img {
@@ -207,23 +206,27 @@ onUnmounted(() => {
   font-size: 1.1rem;
   font-weight: bold;
   line-height: 1.3rem;
-  height: 3.2rem;
+}
+.movie-release-date {
+  font-size: 0.9rem;
+  margin-top: 0.1rem;
+  margin-bottom: 0.1rem;
 }
 .movie-genres {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   align-items: flex-start;
-  justify-content: center;
-  gap: 0.2rem;
+  justify-content: left;
+  gap: 0.3rem;
 }
 
 .movie-genres span {
   background-color: #770000;
-  border-radius: 0.5rem;
-  padding: 0.2rem 0.5rem;
+  border-radius: 0.4rem;
+  padding: 0.1rem 0.3rem 0.1rem 0.3rem;
   color: #000000ff;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-weight: bold;
 }
 

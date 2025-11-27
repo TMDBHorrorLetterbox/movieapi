@@ -51,8 +51,11 @@
   }"
 >
     <div class="content">
-      <!-- Trailer Section -->
-      <div v-if="trailerUrl" class="trailer-section">
+     
+
+      <div class="details">
+        <div class="capatrailer">
+         <div v-if="trailerUrl" class="trailer-section">
         <iframe
           class="trailer"
           :src="trailerUrl + '?autoplay=0'"
@@ -62,12 +65,11 @@
           allowfullscreen
         ></iframe>
       </div>
-
-      <div class="details">
         <img
         :src="`https://image.tmdb.org/t/p/w185${movieStore.currentMovie.poster_path}`"
         :alt="movieStore.currentMovie.title"
       />
+      </div>
 
         <div class="left">
         <h1>Filme: {{ movieStore.currentMovie.title }}</h1>
@@ -164,9 +166,9 @@
     text-shadow: 2px 2px 4px #000000;
   }
 
-  .trailer-section {
+  .capatrailer .trailer-section {
     width: 100%;
-    max-width: 800px;
+    max-width: 500px;
     margin-bottom: 2rem;
     aspect-ratio: 16 / 9;
     border-radius: 8px;
@@ -191,16 +193,16 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    margin-left: 3rem;
-    height: 600px;
+    margin-left: 2rem;
+    height: 530px;
   }
-  .details img {
+  .capatrailer img {
     border-radius: 10px;
     box-shadow: 0 0 20px #000000;
   }
   .left {
     max-width: 40%;
-    margin-left: -10rem;
+    margin-left: 5rem;
   }
   .left h1 {
     font-size: 4rem;
