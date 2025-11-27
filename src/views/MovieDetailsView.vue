@@ -1,5 +1,5 @@
 <script setup>
-  import { defineProps, onMounted, watch } from 'vue';
+  import { defineProps, onMounted, watch, computed } from 'vue';
   import { useMovieStore } from '@/stores/movie';
   import { useWatchedStore } from '@/stores/watched';
   import { useLikedStore } from '@/stores/liked';
@@ -24,6 +24,17 @@
   onMounted(loadMovie);
 
   watch(() => props.movieId, loadMovie);
+
+  // Extrai o primeiro trailer (YouTube) ou null
+  const trailerKey = computed(() => {
+    const videos = movieStore.currentMovie.videos?.results || [];
+    const trailer = videos.find(v => v.type === 'Trailer' && v.site === 'YouTube');
+    return trailer?.key || null;
+  });
+
+  const trailerUrl = computed(() => {
+    return trailerKey.value ? `https://www.youtube.com/embed/${trailerKey.value}` : null;
+  });
 </script>
 
 <template>
@@ -40,14 +51,25 @@
   }"
 >
     <div class="content">
-      
+      <!-- Trailer Section -->
+      <div v-if="trailerUrl" class="trailer-section">
+        <iframe
+          class="trailer"
+          :src="trailerUrl + '?autoplay=0'"
+          title="Trailer"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+      </div>
+
       <div class="details">
         <img
         :src="`https://image.tmdb.org/t/p/w185${movieStore.currentMovie.poster_path}`"
         :alt="movieStore.currentMovie.title"
       />
 
-        <div class="left"> 
+        <div class="left">
         <h1>Filme: {{ movieStore.currentMovie.title }}</h1>
         <p>{{ movieStore.currentMovie.tagline }}</p>
         <p>{{ movieStore.currentMovie.overview }}</p>
@@ -99,7 +121,7 @@
           />
         </div>
         </div>
-        
+
       </div>
     </div>
   </div>
@@ -141,6 +163,23 @@
     color: white;
     text-shadow: 2px 2px 4px #000000;
   }
+
+  .trailer-section {
+    width: 100%;
+    max-width: 800px;
+    margin-bottom: 2rem;
+    aspect-ratio: 16 / 9;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #000;
+  }
+
+  .trailer {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
   .companies {
     display: flex;
     flex-direction: row;
@@ -162,7 +201,7 @@
   .left {
     max-width: 40%;
     margin-left: -10rem;
-  } 
+  }
   .left h1 {
     font-size: 4rem;
     font-family: julius sans one, sans-serif;
@@ -187,8 +226,6 @@
     color: white;
     cursor: pointer;
   }
-
-  
 
   .cast {
     display: grid;

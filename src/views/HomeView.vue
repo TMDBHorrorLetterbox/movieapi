@@ -1,3 +1,62 @@
+<script setup>
+import { ref, onMounted } from 'vue';
+import api from '@/plugins/axios';
+import { useRouter } from 'vue-router';
+
+const popular = ref([]);
+const premieres = ref([]);
+const topRated = ref([]);
+const popularRef = ref(null);
+const premieresRef = ref(null);
+const topRatedRef = ref(null);
+const router = useRouter();
+
+const fetchLists = async () => {
+  try {
+    const [p, n, t] = await Promise.all([
+      api.get('movie/popular', { params: { language: 'pt-BR', page: 1 } }),
+      api.get('movie/now_playing', { params: { language: 'pt-BR', page: 1 } }),
+      api.get('movie/top_rated', { params: { language: 'pt-BR', page: 1 } }),
+    ]);
+    popular.value = p.data.results || [];
+    premieres.value = n.data.results || [];
+    topRated.value = t.data.results || [];
+  } catch (err) {
+    console.error('Erro ao buscar listas:', err);
+  }
+};
+
+onMounted(fetchLists);
+
+const openMovie = (id) => router.push({ name: 'MovieDetails', params: { movieId: id } });
+
+const scrollBy = (elRef, dir = 1) => {
+  const el = elRef?.value;
+  if (!el) return;
+  const cardWidth = el.querySelector('.card')?.offsetWidth || 200;
+  const gap = 16; // approx gap set in CSS
+  const distance = (cardWidth + gap) * 3 * dir; // scroll by 3 cards
+  el.scrollBy({ left: distance, behavior: 'smooth' });
+};
+
+const handleKeydown = (e, elRef) => {
+  if (!elRef?.value) return;
+  const key = e.key;
+  if (key === 'ArrowLeft' || key === 'PageUp') {
+    e.preventDefault();
+    scrollBy(elRef, -1);
+  } else if (key === 'ArrowRight' || key === 'PageDown') {
+    e.preventDefault();
+    scrollBy(elRef, 1);
+  }
+};
+
+// explicit helpers bound from template (safer than inline ref expressions)
+const scrollPopular = (dir = 1) => scrollBy(popularRef, dir);
+const scrollPremieres = (dir = 1) => scrollBy(premieresRef, dir);
+const scrollTopRated = (dir = 1) => scrollBy(topRatedRef, dir);
+</script>
+
 <template>
   <section class="inicio">
     <div class="espacer">
@@ -18,13 +77,45 @@
   </section>
   <section class="destaqueCla">
     <div class="cla">
-      <h2>Clássicos</h2>
+      <h2>Populares</h2>
+      <div class="carousel-wrap">
+        <button type="button" class="arrow left" aria-label="Rolar para esquerda - Populares" @click="scrollPopular(-1)">‹</button>
+        <div class="carousel" ref="popularRef" tabindex="0" @keydown="(e) => handleKeydown(e, popularRef)">
+          <div v-for="m in popular" :key="m.id" class="card" @click="openMovie(m.id)">
+            <img :src="`https://image.tmdb.org/t/p/w300${m.poster_path}`" :alt="m.title" />
+            <p class="title">{{ m.title }}</p>
+          </div>
+        </div>
+        <button type="button" class="arrow right" aria-label="Rolar para direita - Populares" @click="scrollPopular(1)">›</button>
+      </div>
     </div>
-    <div class="rec">
-      <h2>Recentes</h2>
+
+    <div class="Estreias">
+      <h2>Estreias</h2>
+      <div class="carousel-wrap">
+        <button type="button" class="arrow left" aria-label="Rolar para esquerda - Estreias" @click="scrollPremieres(-1)">‹</button>
+        <div class="carousel" ref="premieresRef" tabindex="0" @keydown="(e) => handleKeydown(e, premieresRef)">
+          <div v-for="m in premieres" :key="m.id" class="card" @click="openMovie(m.id)">
+            <img :src="`https://image.tmdb.org/t/p/w300${m.poster_path}`" :alt="m.title" />
+            <p class="title">{{ m.title }}</p>
+          </div>
+        </div>
+        <button type="button" class="arrow right" aria-label="Rolar para direita - Estreias" @click="scrollPremieres(1)">›</button>
+      </div>
     </div>
-    <div class="filmesB">
-      <h2>Filmes B</h2>
+
+    <div class="avaliados">
+      <h2>Mais bem avaliados</h2>
+      <div class="carousel-wrap">
+        <button type="button" class="arrow left" aria-label="Rolar para esquerda - Mais bem avaliados" @click="scrollTopRated(-1)">‹</button>
+        <div class="carousel" ref="topRatedRef" tabindex="0" @keydown="(e) => handleKeydown(e, topRatedRef)">
+          <div v-for="m in topRated" :key="m.id" class="card" @click="openMovie(m.id)">
+            <img :src="`https://image.tmdb.org/t/p/w300${m.poster_path}`" :alt="m.title" />
+            <p class="title">{{ m.title }}</p>
+          </div>
+        </div>
+        <button type="button" class="arrow right" aria-label="Rolar para direita - Mais bem avaliados" @click="scrollTopRated(1)">›</button>
+      </div>
     </div>
   </section>
 </template>
@@ -135,4 +226,27 @@ section {
 .filmesB {
   padding-bottom: 120px;
 }
+
+.carousel {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding: 1rem 0;
+}
+
+.card { flex: 0 0 auto; width: 180px; cursor: pointer; }
+.card img { width: 100%; border-radius: 8px; display:block; }
+.card .title { font-size: 0.9rem; margin-top: 0.4rem; color:#ddd; }
+
+/* hide scrollbar for nicer look */
+.carousel::-webkit-scrollbar { height: 8px; }
+.carousel::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+
+.carousel-wrap { position: relative; display:flex; align-items:center; padding: 0 40px; }
+.arrow { position: absolute; background: rgba(0,0,0,0.6); border:none; color:#fff; width:36px; height:48px; font-size:28px; cursor:pointer; z-index:40; pointer-events: auto; }
+.arrow.left { left: 8px; }
+.arrow.right { right: 8px; }
+.arrow:focus { outline: 2px solid #666; }
+
+
 </style>
