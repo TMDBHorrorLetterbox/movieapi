@@ -12,7 +12,7 @@ function openTvShow(tvShowId) {
 
 const genreStore = useGenreStore();
 
-const formatDate = (date) => new Date(date).toLocaleDateString('pt-BR');
+const formatDate = (date) => new Date(date).getFullYear('pt-BR');
 const isLoading = ref(false);
 
 const tvShows = ref([]);
@@ -122,13 +122,10 @@ onUnmounted(() => {
   if (observer.value) observer.value.disconnect();
   if (resumeTimeout.value) clearTimeout(resumeTimeout.value);
 });
-
-// removed local genres/getGenreName in favor of the genre store methods
 </script>
 
 <template>
-  <div>
-    <h1>Programas de TV</h1>
+  <div class="tvShows-view">
   <Loading v-model:active="isLoading" is-full-page />
   <div class="tv-list">
   <div v-for="tvShow in tvShows" :key="tvShow.id" class="tv-card">
@@ -138,7 +135,7 @@ onUnmounted(() => {
   @click="openTvShow(tvShow.id)" />
     <div class="tv-details">
       <p class="tv-title">{{ tvShow.name }}</p>
-      <p class="tv-release-date">{{ formatDate(tvShow.first_air_date) }}</p>
+      <p class="tv-release-date">Lançamento: {{ formatDate(tvShow.first_air_date) }}</p>
       <p class="tv-genres">
   <span
   v-for="genre_id in tvShow.genre_ids"
@@ -157,45 +154,38 @@ onUnmounted(() => {
   </div>
   </div>
 </template>
-
 <style scoped>
-  .genre-list {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 2rem;
-    list-style: none;
-    margin-bottom: 2rem;
-  }
+.tvShows-view {
+  padding: 1rem 2rem;
+  background-color: rgb(0, 0, 0);
+  color: #8d0000ff;
+  min-height: 100vh;
+}
+.genre-list {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+  list-style: none;
+  margin-bottom: 2rem;
+}
 
-  .genre-item {
-    background-color: #5d6424;
-    border-radius: 1rem;
-    padding: 0.5rem 1rem;
-    align-self: center;
-    color: #fff;
-    display: flex;
-    justify-content: center;
-  }
 
-  .genre-item:hover {
-    cursor: pointer;
-    background-color: #7d8a2e;
-    box-shadow: 0 0 0.5rem #5d6424;
-  }
-
-  .tv-list {
+.tv-list {
+  margin-top: 4rem;
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 4rem;
+  justify-content: center;
 }
 
 .tv-card {
   width: 15rem;
-  height: 30rem;
+  height: 27rem;
   border-radius: 0.5rem;
   overflow: hidden;
-  box-shadow: 0 0 0.5rem #000;
+  background-color: #0e0e0eff;
+  box-shadow: 0 0 0.5rem rgb(146, 0, 0);
 }
 
 .tv-card img {
@@ -213,30 +203,34 @@ onUnmounted(() => {
   font-size: 1.1rem;
   font-weight: bold;
   line-height: 1.3rem;
-  height: 3.2rem;
 }
-
+.tv-release-date {
+  font-size: 0.9rem;
+  margin-top: 0.1rem;
+  margin-bottom: 0.1rem;
+}
 .tv-genres {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   align-items: flex-start;
-  justify-content: center;
-  gap: 0.2rem;
+  justify-content: left;
+  gap: 0.3rem;
 }
 
 .tv-genres span {
-  background-color: #748708;
-  border-radius: 0.5rem;
-  padding: 0.2rem 0.5rem;
-  color: #fff;
-  font-size: 0.8rem;
+  background-color: #770000;
+  border-radius: 0.4rem;
+  padding: 0.1rem 0.3rem 0.1rem 0.3rem;
+  color: #000000ff;
+  font-size: 0.7rem;
   font-weight: bold;
 }
 
 .tv-genres span:hover {
   cursor: pointer;
-  background-color: #455a08;
-  box-shadow: 0 0 0.5rem #748708;
+  background-color: #A70000;
+  box-shadow: 0 0 0.5rem #770000;
 }
+
 </style>

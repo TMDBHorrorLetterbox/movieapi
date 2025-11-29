@@ -122,9 +122,9 @@ onUnmounted(() => {
       </div>
 
       <div class="nav-right">
-        <router-link to="/assistidos"><span class="fa-solid fa-eye"></span></router-link>
-        <router-link to="/curtidos"><span class="fa-solid fa-heart"></span></router-link>
-        <router-link to="/lista-desejos"><span class="fa-solid fa-bookmark"></span></router-link>
+        <router-link to="/assistidos"><span class="fa-solid fa-eye" style="color: black;"></span></router-link>
+        <router-link to="/curtidos"><span class="fa-solid fa-heart" style="color: black;"></span></router-link>
+        <router-link to="/lista-desejos"><span class="fa-solid fa-bookmark" style="color: black;"></span></router-link>
       </div>
     </nav>
   </header>
@@ -150,6 +150,7 @@ onUnmounted(() => {
   width: 100vw;
   height: 63px;
   display: flex;
+  z-index: 9999;
   align-items: center;
   padding: 0 20px;
   background: rgba(255, 25, 25, 0.5);
