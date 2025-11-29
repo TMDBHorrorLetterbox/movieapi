@@ -42,7 +42,7 @@ const trailerUrl = computed(() => {
     <div class="loading-text">Carregando...</div>
   </div>
   <div v-else class="main" :style="{
-    background: tvStore.currentTvShow.backdrop_path
+    background: movieStore.currentMovie.backdrop_path
       ? `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,1.0)), url(https://image.tmdb.org/t/p/w1280${movieStore.currentMovie.backdrop_path})`
       : 'none',
     backgroundPosition: 'center',
