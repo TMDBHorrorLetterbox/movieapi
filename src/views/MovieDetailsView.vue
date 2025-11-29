@@ -37,11 +37,11 @@ const trailerUrl = computed(() => {
 </script>
 
 <template>
-  <div v-if="loading" class="loading">
+  <section v-if="loading" class="loading">
     <div class="loading-spinner"></div>
     <div class="loading-text">Carregando...</div>
-  </div>
-  <div v-else class="main" :style="{
+  </section>
+  <section v-else class="main" :style="{
     background: movieStore.currentMovie.backdrop_path
       ? `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,1.0)), url(https://image.tmdb.org/t/p/w1280${movieStore.currentMovie.backdrop_path})`
       : 'none',
@@ -52,7 +52,7 @@ const trailerUrl = computed(() => {
     <div class="content">
 
 
-      <div class="details">
+      <section class="details">
         <div class="capatrailer">
           <img :src="`https://image.tmdb.org/t/p/w185${movieStore.currentMovie.poster_path}`"
             :alt="movieStore.currentMovie.title" />
@@ -66,7 +66,7 @@ const trailerUrl = computed(() => {
           </div>
         </div>
         <div class="left">
-          <h1>Filme: {{ movieStore.currentMovie.title }}</h1>
+          <h1>{{ movieStore.currentMovie.title }}</h1>
           <p>{{ movieStore.currentMovie.tagline }}</p>
           <p>{{ movieStore.currentMovie.overview }}</p>
           <p>Avaliação: {{ movieStore.currentMovie.vote_average }}</p>
@@ -101,10 +101,10 @@ const trailerUrl = computed(() => {
           </div>
         </div>
 
-      </div>
+      </section>
     </div>
-  </div>
-  <div class="body-details">
+  </section>
+  <section class="body-details">
     <p>Produtoras</p>
     <div class="companies">
       <template v-for="company in movieStore.currentMovie.production_companies" :key="company.id">
@@ -122,7 +122,7 @@ const trailerUrl = computed(() => {
         <p class="character-name">{{ actor.character || 'N/A' }}</p>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <style scoped>

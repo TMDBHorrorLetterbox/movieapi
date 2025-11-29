@@ -25,57 +25,92 @@ onMounted(() => {
 </script>
 
 <template>
-  <div>
+  <section>
     <h1>Lista de Desejos</h1>
-    <p v-if="wishlistStore.wishlist.length === 0">Nenhum filme ou série adicionado à lista de desejos.</p>
+    <p v-if="wishlistStore.wishlist.length === 0" style="color: white;">Nenhum filme ou série adicionado à lista de
+      desejos.</p>
     <div class="wishlist-list">
       <div v-for="item in wishlistStore.wishlist" :key="`${item.id}-${item.type}`" class="wishlist-card">
-        <img
-          v-if="item.poster_path"
-          :src="`https://image.tmdb.org/t/p/w185${item.poster_path}`"
-          :alt="item.title"
-          @click="openItem(item)"
-        />
+        <img v-if="item.poster_path" :src="`https://image.tmdb.org/t/p/w185${item.poster_path}`" :alt="item.title"
+          @click="openItem(item)" />
         <div class="wishlist-details">
-          <p class="wishlist-title">{{ item.title }}</p>
-          <p class="wishlist-date">Adicionado em: {{ new Date(item.addedAt).toLocaleString() }}</p>
-          <div class="wishlist-actions">
-            <button @click="openItem(item)">Ver detalhes</button>
-            <button @click="handleRemove(item)">Remover</button>
-          </div>
+            <p class="wishlist-title">{{ item.title }}</p>
+            <p class="wishlist-date">Salvo em: {{ new Date(item.addedAt).toLocaleDateString() }}</p>
+            <div class="wishlist-actions">
+              <button @click="openItem(item)">Ver detalhes</button>
+              <button @click="handleRemove(item)"><span class="fa-solid fa-trash-can"></span></button>
+            </div>
         </div>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <style scoped>
+section {
+  padding: 3rem;
+  background-color: rgb(0, 0, 0);
+  min-height: 100vh;
+}
+
+section h1 {
+  margin-bottom: 2rem;
+  font-family: julius-sans-one;
+  color: #ffff;
+  font-size: 2.5rem;
+}
+
 .wishlist-list {
   display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
+  flex-direction: column;
 }
+
 .wishlist-card {
-  width: 15rem;
+  display: flex;
+  height: 10rem;
+  width: 40rem;
   border-radius: 0.5rem;
   overflow: hidden;
   box-shadow: 0 0 0.5rem #000;
-  background: #111;
+  background: #3d0909;
   color: #fff;
   padding: 0.5rem;
+  margin-bottom: 1rem;
+  
 }
+
 .wishlist-card img {
-  width: 100%;
+  
+  width: auto;
   height: auto;
   border-radius: 0.25rem;
 }
+
 .wishlist-details {
-  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: top;
+  display: flex;
+  margin: 0.5rem 0 0 1rem;
 }
+
 .wishlist-title {
   font-weight: bold;
+  font-family: julius sans one, sans-serif;
+  font-size: 1.3rem;
 }
+
+
 .wishlist-actions button {
-  margin-right: 0.5rem;
+  font-size: 0.9rem;
+  background: none;
+  border: none;
+  color: #fff;
+  margin-right: 2rem;
+  padding: 0;
+}
+
+.wishlist-actions button:hover {
+  cursor: pointer;
 }
 </style>

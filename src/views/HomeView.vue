@@ -60,16 +60,17 @@ const scrollTopRated = (dir = 1) => scrollBy(topRatedRef, dir);
 <template>
   <section class="inicio">
     <div class="espacer">
-        <div class="bemVindo">
-          <h1>BEM-VINDO À DARKLIST</h1>
-          <h3>Pronto para descobrir o verdadeiro horror?</h3>
-        </div>
+      <div class="bemVindo">
+        <h1>BEM-VINDO À DARKLIST</h1>
+        <h3>Pronto para descobrir o verdadeiro horror?</h3>
+      </div>
       <div class="inferior">
         <div class="start">
           <router-link to="/filmes"><button>COMEÇAR</button></router-link>
         </div>
         <div class="slogan">
-        <h3>Aqui, os fãs de terror encontram o paraíso! Com um catálogo restrito à horror e crimes, permitimos a avaliação e resenha de filmes vistos por você.</h3>
+          <h3>Aqui, os fãs de terror encontram o paraíso! Com um catálogo restrito à horror e crimes, permitimos a
+            avaliação e resenha de filmes vistos por você.</h3>
         </div>
       </div>
     </div>
@@ -79,48 +80,53 @@ const scrollTopRated = (dir = 1) => scrollBy(topRatedRef, dir);
     <div class="cla">
       <h2>Populares</h2>
       <div class="carousel-wrap">
-        <button type="button" class="arrow left" aria-label="Rolar para esquerda - Populares" @click="scrollPopular(-1)">‹</button>
+        <button type="button" class="arrow left" aria-label="Rolar para esquerda - Populares"
+          @click="scrollPopular(-1)">‹</button>
         <div class="carousel" ref="popularRef" tabindex="0" @keydown="(e) => handleKeydown(e, popularRef)">
           <div v-for="m in popular" :key="m.id" class="card" @click="openMovie(m.id)">
             <img :src="`https://image.tmdb.org/t/p/w300${m.poster_path}`" :alt="m.title" />
             <p class="title">{{ m.title }}</p>
           </div>
         </div>
-        <button type="button" class="arrow right" aria-label="Rolar para direita - Populares" @click="scrollPopular(1)">›</button>
+        <button type="button" class="arrow right" aria-label="Rolar para direita - Populares"
+          @click="scrollPopular(1)">›</button>
       </div>
     </div>
 
     <div class="Estreias">
       <h2>Estreias</h2>
       <div class="carousel-wrap">
-        <button type="button" class="arrow left" aria-label="Rolar para esquerda - Estreias" @click="scrollPremieres(-1)">‹</button>
+        <button type="button" class="arrow left" aria-label="Rolar para esquerda - Estreias"
+          @click="scrollPremieres(-1)">‹</button>
         <div class="carousel" ref="premieresRef" tabindex="0" @keydown="(e) => handleKeydown(e, premieresRef)">
           <div v-for="m in premieres" :key="m.id" class="card" @click="openMovie(m.id)">
             <img :src="`https://image.tmdb.org/t/p/w300${m.poster_path}`" :alt="m.title" />
             <p class="title">{{ m.title }}</p>
           </div>
         </div>
-        <button type="button" class="arrow right" aria-label="Rolar para direita - Estreias" @click="scrollPremieres(1)">›</button>
+        <button type="button" class="arrow right" aria-label="Rolar para direita - Estreias"
+          @click="scrollPremieres(1)">›</button>
       </div>
     </div>
 
     <div class="avaliados">
       <h2>Mais bem avaliados</h2>
       <div class="carousel-wrap">
-        <button type="button" class="arrow left" aria-label="Rolar para esquerda - Mais bem avaliados" @click="scrollTopRated(-1)">‹</button>
+        <button type="button" class="arrow left" aria-label="Rolar para esquerda - Mais bem avaliados"
+          @click="scrollTopRated(-1)">‹</button>
         <div class="carousel" ref="topRatedRef" tabindex="0" @keydown="(e) => handleKeydown(e, topRatedRef)">
           <div v-for="m in topRated" :key="m.id" class="card" @click="openMovie(m.id)">
             <img :src="`https://image.tmdb.org/t/p/w300${m.poster_path}`" :alt="m.title" />
             <p class="title">{{ m.title }}</p>
           </div>
         </div>
-        <button type="button" class="arrow right" aria-label="Rolar para direita - Mais bem avaliados" @click="scrollTopRated(1)">›</button>
+        <button type="button" class="arrow right" aria-label="Rolar para direita - Mais bem avaliados"
+          @click="scrollTopRated(1)">›</button>
       </div>
     </div>
   </section>
 </template>
 <style scoped>
-
 body {
   margin: 0;
   padding: 0;
@@ -137,7 +143,7 @@ section {
   width: 100%;
   padding: 180px 40px 80px;
   background:
-    linear-gradient(to bottom, rgba(0,0,0,0.2), #000),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.2), #000),
     url('/bannerArt.png');
 
   background-size: cover;
@@ -146,8 +152,9 @@ section {
 }
 
 .espacer {
- margin: 305px 30px 0 30px;
+  margin: 305px 30px 0 30px;
 }
+
 .bemVindo h1 {
   font-size: 4rem;
   letter-spacing: 2px;
@@ -163,12 +170,14 @@ section {
   margin-bottom: 10px;
   font-family: junge, sans-serif;
 }
+
 .inferior {
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-family: junge, sans-serif;
 }
+
 .start {
   max-width: 600px;
 }
@@ -209,6 +218,7 @@ section {
 }
 
 .destaqueCla {
+  background-color: black;
   padding: 40px;
 }
 
@@ -217,14 +227,8 @@ section {
   margin: 40px 0 20px;
   font-weight: 600;
   letter-spacing: 1px;
-}
-
-.cla, .rec, .filmesB {
-  margin-bottom: 60px;
-}
-
-.filmesB {
-  padding-bottom: 120px;
+  color: #fff;
+  font-family: julius sans one, sans-serif;
 }
 
 .carousel {
@@ -234,19 +238,63 @@ section {
   padding: 1rem 0;
 }
 
-.card { flex: 0 0 auto; width: 180px; cursor: pointer; }
-.card img { width: 100%; border-radius: 8px; display:block; }
-.card .title { font-size: 0.9rem; margin-top: 0.4rem; color:#ddd; }
+.card {
+  flex: 0 0 auto;
+  width: 180px;
+  cursor: pointer;
+}
 
-/* hide scrollbar for nicer look */
-.carousel::-webkit-scrollbar { height: 8px; }
-.carousel::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+.card img {
+  width: 100%;
+  border-radius: 8px;
+  display: block;
+}
 
-.carousel-wrap { position: relative; display:flex; align-items:center; padding: 0 40px; }
-.arrow { position: absolute; background: rgba(0,0,0,0.6); border:none; color:#fff; width:36px; height:48px; font-size:28px; cursor:pointer; z-index:40; pointer-events: auto; }
-.arrow.left { left: 8px; }
-.arrow.right { right: 8px; }
-.arrow:focus { outline: 2px solid #666; }
+.card .title {
+  font-size: 1rem;
+  margin-top: 0.4rem;
+  color: #ddd;
+}
 
+/* hide scrollbar */
+.carousel::-webkit-scrollbar {
+  height: 0px;
+}
 
+.carousel::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 4px;
+}
+
+.carousel-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0 40px;
+}
+
+.arrow {
+  position: absolute;
+  background: rgba(133, 0, 0, 0.6);
+  border: none;
+  color: #fff;
+  width: 36px;
+  height: 48px;
+  font-size: 28px;
+  cursor: pointer;
+  z-index: 40;
+  pointer-events: auto;
+}
+
+.arrow.left {
+  left: 8px;
+}
+
+.arrow.right {
+  right: 8px;
+}
+
+.arrow:focus {
+  outline: 2px solid #666;
+}
 </style>

@@ -45,12 +45,12 @@ const trailerUrl = computed(() => {
 
 <template>
 
-<div v-if="loading" class="loading">
+<section v-if="loading" class="loading">
   <div class="loading-spinner"></div>
   <div class="loading-text">Carregando...</div>
-</div>
+</section>
 
-<div v-else class="main" :style="{
+<section v-else class="main" :style="{
     background: tvStore.currentTvShow.backdrop_path
       ? `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,1.0)), url(https://image.tmdb.org/t/p/w1280${tvStore.currentTvShow.backdrop_path})`
       : 'none',
@@ -58,7 +58,7 @@ const trailerUrl = computed(() => {
     backgroundSize: 'cover',
     backgroundRepeat: 'no-repeat'
   }">
-    <div class="content">
+    <section class="content">
       <div class="details">
 
         <div class="capatrailer">
@@ -75,7 +75,7 @@ const trailerUrl = computed(() => {
         </div>
 
         <div class="left">
-          <h1>Série: {{ tvStore.currentTvShow.title }}</h1>
+          <h1>{{ tvStore.currentTvShow.title }}</h1>
           <p>{{ tvStore.currentTvShow.tagline }}</p>
           <p>{{ tvStore.currentTvShow.overview }}</p>
           <p>Avaliação: {{ tvStore.currentTvShow.vote_average }}</p>
@@ -115,8 +115,8 @@ const trailerUrl = computed(() => {
           </div>
         </div>
       </div>
-    </div>
-  </div>
+    </section>
+  </section>
 
   <div class="body-details">
     <p>Produtoras</p>
