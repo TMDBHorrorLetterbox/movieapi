@@ -10,7 +10,10 @@ export const useTvStore = defineStore('tv', () => {
   const currentTvShow = computed(() => state.currentTvShow);
 
   const getTvShowDetail = async (tvShowId) => {
-    const response = await api.get(`tv/${tvShowId}`);
+    const response = await api.get(`tv/${tvShowId}`, { params: { 
+      append_to_response: 'credits,videos',
+      language: 'pt-BR' 
+    } });
     state.currentTvShow = response.data;
   };
 
