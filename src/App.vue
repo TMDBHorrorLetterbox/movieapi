@@ -1,5 +1,5 @@
 <script setup>
-  import { ref, onMounted } from 'vue';
+  import { ref, onMounted, onUnmounted } from 'vue';
   import { useRouter } from 'vue-router';
   import api from './plugins/axios';
 
@@ -66,11 +66,35 @@
     else router.push({ name: 'TvShowDetails', params: { tvShowId: item.id } });
   };
 
+
+const showNav = ref(true);
+let lastScroll = 0;
+
+const handleScroll = () => {
+  const currentScroll = window.scrollY;
+
+  if (currentScroll < lastScroll) {
+    showNav.value = true;
+  } else {
+    showNav.value = false;
+  }
+
+  lastScroll = currentScroll;
+};
+
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll);
+});
+
 </script>
 
 <template>
   <header>
-    <nav>
+    <nav :class="{ visible: showNav }" class="navbar">
       <div class="nav-left">
         <router-link to="/">
           <img src="/public/Group 5.svg" alt="">
@@ -98,9 +122,9 @@
       </div>
 
       <div class="nav-right">
-        <router-link to="/assistidos"><span class="fa-solid fa-eye"></span></router-link>
-        <router-link to="/curtidos"><span class="fa-solid fa-heart"></span></router-link>
-        <router-link to="/lista-desejos"><span class="fa-solid fa-bookmark"></span></router-link>
+        <router-link to="/assistidos"><span class="fa-solid fa-eye" style="color: black;"></span></router-link>
+        <router-link to="/curtidos"><span class="fa-solid fa-heart" style="color: black;"></span></router-link>
+        <router-link to="/lista-desejos"><span class="fa-solid fa-bookmark" style="color: black;"></span></router-link>
       </div>
     </nav>
   </header>
@@ -116,10 +140,29 @@
 </template>
 
 <style scoped>
+.router-link-exact-active {
+  color: #ffdbdb;
+}
+.navbar {
+ position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 63px;
+  display: flex;
+  z-index: 9999;
+  align-items: center;
+  padding: 0 20px;
+  background: rgba(255, 25, 25, 0.5);
+  backdrop-filter: blur(5px);
+  transition: transform 0.3s ease;
+}
+
+
 header {
   height: 4rem;
   display: flex;
-  background-color: #770000;
+  background-color: #110000;
   color: #fff;
   font-size: 1.2rem;
   padding-left: 3rem;
@@ -140,7 +183,9 @@ nav input {
 }
 
 nav {
-  font-size: 1.3rem;
+  font-family: julius sans one, sans-serif;
+  font-weight: bold;
+  font-size: 1.4rem;
   column-gap: 2rem;
   margin-bottom: 0;
   display: flex;
@@ -150,7 +195,7 @@ nav {
 nav a {
   text-decoration: none;
   color: #000000;
-  
+
 }
 
 nav img {
@@ -158,65 +203,88 @@ nav img {
   margin-top: 0.7rem;
 }
 
-.nav-left { 
-  display:flex; 
-  align-items:center; 
-  gap:4rem; 
+.nav-left {
+  display:flex;
+  align-items:center;
+  gap:4rem;
 }
-.nav-search { 
-  position:relative; 
-  margin-left:5rem; 
+.nav-search {
+  position:relative;
+  margin-left:5rem;
 }
-.nav-search input { 
-  padding:0.3rem 0.5rem; 
-  border-radius:4px; 
-  border:1px solid #000000; 
-  background:#ffffff; 
-  color:#000000; 
+.nav-search input {
+  padding:0.3rem 0.5rem;
+  border-radius:4px;
+  border:1px solid #000000;
+  background:#ffffff;
+  color:#000000;
 }
-.search-suggestions { 
-  position:absolute; 
-  top:2.6rem; 
-  left:0; 
-  background:#770000; 
-  border:1px solid #222; 
-  width:24rem; 
-  max-height:18rem; 
-  overflow:auto; 
-  z-index:40; 
-  padding:0.5rem; 
-  border-radius:4px; 
+
+.navbar:not(.visible) {
+  transform: translateY(-100%);
 }
-.suggestion { 
-  display:flex; 
-  gap:0.5rem; 
-  align-items:center; 
-  padding:0.35rem; 
-  cursor:pointer; 
+
+.navbar.visible {
+  transform: translateY(0);
 }
-.suggestion img { 
-  width:40px; 
-  height:auto; 
-  border-radius:4px; 
+.search-suggestions {
+  position:absolute;
+  top:2.6rem;
+  left:0;
+  background:#770000;
+  border:1px solid #222;
+  width:24rem;
+  max-height:18rem;
+  overflow:auto;
+  z-index:40;
+  padding:0.5rem;
+  border-radius:4px;
 }
-.suggestion:hover { 
-  background:rgba(255,255,255,0.03); 
+.suggestion {
+  display:flex;
+  gap:0.5rem;
+  align-items:center;
+  padding:0.35rem;
+  cursor:pointer;
 }
-.muted { 
-  color:#aaa; 
-  margin-left:auto; 
-  font-size:0.75rem; 
-  margin-right: 10px; 
+.suggestion img {
+  width:40px;
+  height:auto;
+  border-radius:4px;
 }
-.nav-right { 
-  margin-left: 30rem;
+.suggestion:hover {
+  background:rgba(255,255,255,0.03);
+}
+.muted {
+  color:#aaa;
+  margin-left:auto;
+  font-size:0.75rem;
+  margin-right: 10px;
+}
+.nav-right {
+  margin-left: auto;
   display: flex;
-  gap: 1rem; 
+  gap: 1rem;
   align-items: center;
 }
 
-.nav-right span { 
-  font-size: 1.4rem; 
+.nav-right a, .nav-right span {
+  color: #fff;
+}
+
+.nav-right span {
+  font-size: 1.4rem;
   cursor: pointer;
+}
+
+footer {
+  height: 10rem;
+  background-color: #770000;
+  color: #000000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
 }
 </style>
